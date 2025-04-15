@@ -68,6 +68,11 @@ def process_urls(input_file, output_dir):
         urls = file.read().splitlines()
     
     for url in urls:
-        download_youtube_video(url, output_dir)
+        try:
+            download_youtube_video(url, output_dir)
+        except Exception as e:
+            print(f"Download{url} failed with error: {e}")
 
+
+process_urls(INPUT_FILE, OUTPUT_DIR)
 process_urls(INPUT_FILE, OUTPUT_DIR)

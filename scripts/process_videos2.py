@@ -54,12 +54,21 @@ def split_out_hymns(input_file, desc):
 
 def save_hymns(input_file, hymns):
     clip = VideoFileClip(input_file)
+    unknown_count = 1
     for hymn in hymns:
         start, end = hymn['start'], hymn['end']
         hymn_clip = clip.subclipped(start, end)
-        filename = hymn['name'].replace(" ", "_")
-        hymn_file_name = os.path.join(OUTPUT_DIR, f"{hymn['name']}.mp4")
-        hymn_clip.write_videofile(hymn_file_name, codec='libx264')
+        try:
+            #filename = hymn['name'].replace(" ", "_")
+            hymn_file_name = os.path.join(OUTPUT_DIR, f"{hymn['name']}.mp4")
+            hymn_clip.write_videofile(hymn_file_name, codec='libx264')
+        except Exception as e:
+            print(f"Failed detect name saving hymn as unknown{unknown_count}")
+            try:
+                hymn_clip.write_videofile(hymn_file_name, codec='libx264')
+            except Exception as e:
+                print(f"Failed saving unknown hymn{unknown_count}")
+            unknown_count += 1
 
 
 def process_urls(input_dir, output_dir):
